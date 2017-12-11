@@ -2,6 +2,8 @@ const router = require('express').Router();
 const contactsRoutes = require('./contacts')
 const contacts = require('../../models/contacts');
 const middlewares = require('../middlewares');
+const authRouter = require('./authentication')
+
 
 router.get('/', (request, response, next) => {
   contacts.findAll()
@@ -9,6 +11,7 @@ router.get('/', (request, response, next) => {
     .catch( error => next(error) )
 })
 
+router.use('/', authRouter)
 router.use('/contacts', contactsRoutes);
 
 router.use(middlewares.logErrors);
