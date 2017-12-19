@@ -16,4 +16,9 @@ const setDefaultResponseLocals = (request, response, next) => {
   next()
 }
 
-module.exports = { errorHandler, logErrors, notFoundHandler, setDefaultResponseLocals };
+const addUserToRequest = (req, res, next) => {
+  req.user = req.session.user
+  next()
+}
+
+module.exports = { errorHandler, logErrors, notFoundHandler, setDefaultResponseLocals, addUserToRequest };

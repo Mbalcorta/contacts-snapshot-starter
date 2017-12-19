@@ -1,8 +1,12 @@
 <nav>
-  <a href="/">Home</a>
-  <form method="get" action="/contacts/search" class="search-form">
-    <input name="q" type="search" placeholder="search" value="<%= query %>" autofocus/>
-    <input type="submit" style="display: none" />
-  </form>
+  <a href="/index">Home</a>
+  <%- include form.ejs %>
   <a href="/contacts/new">New Contact</a>
+  <% if(signup) {%>
+    <a href="/login">Login</a>
+  <% } else if(welcome){ %>
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <a href="/signup">Sign Up</a>
+  <% } %>
 </nav>

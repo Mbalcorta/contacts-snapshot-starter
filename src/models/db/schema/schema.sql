@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
   id serial primary key, 
-  login varchar(12) unique NOT NULL,
-  password varchar(15) NOT NULL
+  email varchar(1255) unique NOT NULL,
+  encrypted_password varchar(255) NOT NULL,
+  role varchar(255) NOT NULL
 );
