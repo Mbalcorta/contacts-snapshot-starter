@@ -23,7 +23,7 @@ router.get('/', (request, response, next) => {
       .then((contacts) => {response.render('contacts/index', { contacts, signup: false, home: false, welcome: true, access: request.session.user.role })})
       .catch( error => next(error) )
      } else {
-      response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true})
+      response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true })
       }
     } else {
     response.redirect('/signup')

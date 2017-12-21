@@ -3,11 +3,8 @@ const db = require('../../models/authentication.js')
 const { encrypt, decrypt } = require('../../models/padlock.js')
 const { hasPermissions } = require('../authorization.js')
 
-const session = (session, exist, email, signup, welcome) => {
-  session.emailExist = exist
+const session = (session) => {
   session.email = email
-  session.signup = signup
-  session.welcome = welcome
 }
 
 const createSession = (session, member) => {
@@ -15,7 +12,7 @@ const createSession = (session, member) => {
 }
 
 router.get('/login', (request, response) => {
-    response.render('login', {signup: request.session.signup,  email: request.session.user ? request.session.user.email : false, welcome: false, wrongPassword: false, loggedOut: false, home: false })
+    response.render('login', {signup: false,  email: request.session.user ? request.session.user.email : false, welcome: false, wrongPassword: false, loggedOut: false, home: false })
 })
 
 router.post('/login', (request, response, next) => {
@@ -40,11 +37,6 @@ router.post('/login', (request, response, next) => {
   })
 })
 
-//index page can't be viewed if not logged in
-router.get('/index', (request, response) => {
-
-})
-
 router.get('/signup', (request, response) => {
     response.render('signup', {signup: true})
 })
@@ -61,7 +53,7 @@ router.post('/signup', (request, response) => {
     .catch((error) => {
       console.log(error)
       if(error.code === '23505'){
-      session(request.session, true, email, false, false)
+      session(request.session, email)
       response.redirect('/login')
       }
     }) 

@@ -23,4 +23,6 @@
     Authorization
       [x]  A user should have a role associated to it. The values are admin or regular.
       [x]  Only a user with an admin role should be able to create a new contact. If the logged in user is not an admin, going to the route /contacts/new should return a status code 403.
-      []  Only a user with an admin role should be able to delete a contact. If the logged in user is not an admin, going to the route /contacts/delete/:contactId should return a status code 403. The delete links on the page should not be shown if the logged in user is not an admin.
+      [x]  Only a user with an admin role should be able to delete a contact. 
+      [] If the logged in user is not an admin, going to the route /contacts/delete/:contactId should return a status code 403.
+      [x] The delete links on the page should not be shown if the logged in user is not an admin.

@@ -4,9 +4,9 @@ const { hasPermissions } = require('../authorization.js')
 
 router.get('/new', (request, response) => {
   if(hasPermissions(request.session.user.role, 'createContact')){
-    response.render('contacts/new', { signup: false, home: false, welcome: true })    
+    response.render('contacts/new', { signup: false, home: false, welcome: true, access: request.session.user.role })    
   } else {
-    response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true})
+    response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true, access: request.session.user.role})
   }
 })
 
