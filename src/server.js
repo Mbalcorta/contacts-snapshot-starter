@@ -5,8 +5,9 @@ const methodOverride = require('method-override')
 const routes = require('./server/routes');
 const middlewares = require('./server/middlewares');
 const path = require('path');
-const ejsLint = require('ejs-lint');
 const session = require('express-session')
+const db = require('./models/db/db.js')
+const pgSession = require('connect-pg-simple')(session);
 
 app.set('views', __dirname +  '/views')
 app.set('view engine', 'ejs');
@@ -14,9 +15,16 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use(methodOverride('_method'))
+                     
+app.use(session({
+    store: new pgSession({ pgPromise: db }),
+    secret: 'jW8aor76jpPX', // session secret
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days 
+  }));
 
-app.use(session({resave: true, saveUninitialized: true, secret: 'keyboard cat', cookie: { maxAge: 6000 }}))
+app.use(methodOverride('_method'))
 
 app.use(middlewares.addUserToRequest)
 
@@ -25,7 +33,7 @@ app.use(middlewares.setDefaultResponseLocals)
 app.use('/', routes)
 
 app.use((request, response) => {
-  response.render('common/not_found')
+  response.render('common/not_found', {signup: false})
 })
 
 const port = process.env.PORT || 3000

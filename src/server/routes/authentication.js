@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const db = require('../../models/authentication.js')
 const { encrypt, decrypt } = require('../../models/padlock.js')
+const { hasPermissions } = require('../authorization.js')
 
 const session = (session, exist, email, signup, welcome) => {
   session.emailExist = exist
@@ -14,13 +15,12 @@ const createSession = (session, member) => {
 }
 
 router.get('/login', (request, response) => {
-  response.render('login', {signup: request.session.signup, emailExist: request.session.emailExist, email: request.session.email, welcome: false, wrongPassword: false, loggedOut: false })
+    response.render('login', {signup: request.session.signup,  email: request.session.user ? request.session.user.email : false, welcome: false, wrongPassword: false, loggedOut: false, home: false })
 })
 
 router.post('/login', (request, response, next) => {
   const { email, password } = request.body
   //get member object and check passwords
-
   db.findByEmail(email)
   .then((member) => {
     const { encrypted_password } = member
@@ -28,9 +28,9 @@ router.post('/login', (request, response, next) => {
     .then((authorized) => {
       if(authorized){
         createSession(request.session, member)
-        response.redirect('/index')
-      } else {
-        response.render('login', {emailExist: false, wrongPassword: true, signup: false, welcome: false})
+        response.redirect('/')
+      } else { 
+       response.render('login', {email: false, wrongPassword: true, signup: false, welcome: false, home: false})
       }
     })
   })
@@ -40,13 +40,13 @@ router.post('/login', (request, response, next) => {
   })
 })
 
+//index page can't be viewed if not logged in
 router.get('/index', (request, response) => {
-  const emailValue = request.session.user ? request.session.user.email : false
-  response.render('index', { email: emailValue, welcome: true, signup: false})
+
 })
 
 router.get('/signup', (request, response) => {
-  response.render('signup', {signup: true})
+    response.render('signup', {signup: true})
 })
 
 router.post('/signup', (request, response) => {
@@ -56,7 +56,7 @@ router.post('/signup', (request, response) => {
     db.create({email, encrypted_password, role})
     .then((member) => {
       createSession(request.session, {email: email, role: role})
-      response.redirect('/index')
+      response.redirect('/')
     })
     .catch((error) => {
       console.log(error)
@@ -69,7 +69,9 @@ router.post('/signup', (request, response) => {
 })
 
 router.get('/logout', (request, response) => {
-  response.render('login', {loggedOut: true, emailExist: false, wrongPassword: false, signup: true})
+  request.session.destroy(() => {
+    response.redirect('/login')
+  })
 })
 
 module.exports = router

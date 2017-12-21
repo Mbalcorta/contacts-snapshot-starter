@@ -1,9 +1,12 @@
 <nav>
-  <a href="/index">Home</a>
+  <a href="/">Home</a>
   <%- include form.ejs %>
   <a href="/contacts/new">New Contact</a>
   <% if(signup) {%>
     <a href="/login">Login</a>
+  <% } else if(home){ %>
+    <a href="/login">Login</a>
+    <a href="/signup">Sign Up</a>
   <% } else if(welcome){ %>
     <a href="/logout">Logout</a>
   <% } else { %>

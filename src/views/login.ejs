@@ -3,10 +3,10 @@
 <form method="post" action="/login">
   <input type="email" name="email" placeholder="email">
   <input type="password" name="password" placeholder="password">
+  <input type="text" name="role" placeholder="role">
   <input type="submit" value="Login">
-  <input type="hidden" name="role" value="regular">
 </form>
-<% if(emailExist) { %>
+<% if(email) { %>
   <div>Email: <%= email %> already exist please login</div>
 <% } else if(wrongPassword) { %>
   <div>Invalid email or password, please try again</div>

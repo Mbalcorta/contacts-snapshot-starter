@@ -8,9 +8,11 @@
         <a class="contact-link" href="/contacts/<%= contact.id %>">
           <%= contact.first_name %>&nbsp;<%= contact.last_name %>
         </a>
+        <% if(access === 'admin') { %>
         <form action="/contacts/<%= contact.id %>?_method=DELETE" method="POST">
           <button class="delete-contact">delete contact</button>
         </form>
+        <% } %>
       </div>
     <% }) %>
   </div>
