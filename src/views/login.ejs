@@ -6,11 +6,11 @@
   <input type="text" name="role" placeholder="role">
   <input type="submit" value="Login">
 </form>
-<% if(email) { %>
-  <div>Email: <%= email %> already exist please login</div>
-<% } else if(wrongPassword) { %>
+<% if(locals.email) { %>
+  <div>Email: <%= locals.email %> already exist please login</div>
+<% } else if(locals.wrongPassword) { %>
   <div>Invalid email or password, please try again</div>
-<% } else if(loggedOut) { %>
+<% } else if(locals.loggedOut) { %>
   <div>You are logged out</div>
 <% }%>
 <%- include ./partials/footer.ejs %>

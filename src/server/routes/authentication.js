@@ -12,7 +12,9 @@ const createSession = (session, member) => {
 }
 
 router.get('/login', (request, response) => {
-    response.render('login', {signup: false,  email: request.session.user ? request.session.user.email : false, welcome: false, wrongPassword: false, loggedOut: false, home: false })
+  console.log("######### ", request.session.user.emal)
+    // response.locals.email = request.session.user.email
+    // response.render('login')
 })
 
 router.post('/login', (request, response, next) => {
@@ -27,7 +29,7 @@ router.post('/login', (request, response, next) => {
         createSession(request.session, member)
         response.redirect('/')
       } else { 
-       response.render('login', {email: false, wrongPassword: true, signup: false, welcome: false, home: false})
+       response.render('login', { wrongPassword: true })
       }
     })
   })

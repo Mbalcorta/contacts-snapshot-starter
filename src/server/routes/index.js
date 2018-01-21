@@ -20,10 +20,10 @@ router.get('/', (request, response, next) => {
   if(request.session.user) {
     if(hasPermissions(request.session.user.role, 'viewIndex')){
       contacts.findAll()
-      .then((contacts) => {response.render('contacts/index', { contacts, signup: false, home: false, welcome: true, access: request.session.user.role })})
+      .then((contacts) => {response.render('contacts/index', { welcome: true, access: request.session.user.role })})
       .catch( error => next(error) )
      } else {
-      response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true })
+      response.status(403).render('common/unauthorized', {welcome: true })
       }
     } else {
     response.redirect('/signup')
