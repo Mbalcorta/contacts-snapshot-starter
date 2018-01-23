@@ -12,9 +12,10 @@ const createSession = (session, member) => {
 }
 
 router.get('/login', (request, response) => {
-  console.log("######### ", request.session.user.emal)
-    // response.locals.email = request.session.user.email
-    // response.render('login')
+  if(request.session.user){
+    response.locals.email = request.session.user.email  
+  }
+    response.render('login')
 })
 
 router.post('/login', (request, response, next) => {
@@ -45,21 +46,30 @@ router.get('/signup', (request, response) => {
 
 router.post('/signup', (request, response) => {
   const { email, password, role } = request.body
-  encrypt(password)
-  .then((encrypted_password) => {
-    db.create({email, encrypted_password, role})
+  console.log(email)
+  db.findByEmail(email)
     .then((member) => {
-      createSession(request.session, {email: email, role: role})
-      response.redirect('/')
-    })
-    .catch((error) => {
-      console.log(error)
-      if(error.code === '23505'){
-      session(request.session, email)
-      response.redirect('/login')
+      if(member){
+        console.log(member)
+        session(request.session, member.email)
+        response.redirect('/login')  
+      } else {
+        encrypt(password)
+        .then((encrypted_password) => {
+          db.create({email, encrypted_password, role})
+          .then((member) => {
+            createSession(request.session, {email: email, role: role})
+            response.redirect('/')
+          })
+          .catch((error) => {
+            if(error.code === '23505'){
+            session(request.session, email)
+            response.redirect('/login')
+            }
+          }) 
+        })
       }
-    }) 
-  })
+    }).catch(console.error)
 })
 
 router.get('/logout', (request, response) => {
