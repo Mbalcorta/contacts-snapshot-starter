@@ -73,7 +73,7 @@ router.post('/signup', (request, response) => {
 
 router.get('/logout', (request, response) => {
   request.session.destroy(() => {
-    response.redirect('/login')
+    response.render('login', {loggedOut: true})
   })
 })
 
