@@ -1,9 +1,9 @@
 <%- include ./partials/header.ejs %>
 
 <form method="post" action="/signup">
-  <input type="email" name="email" placeholder="email">
-  <input type="password" name="password" placeholder="password">
-  <input type="text" name="role" placeholder="role">
+  <input type="email" name="email" placeholder="email" required>
+  <input type="password" name="password" placeholder="password" required>
+  <input type="text" name="role" placeholder="role" required>
   <input type="submit" value="Sign Up">
 </form>
 

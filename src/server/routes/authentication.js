@@ -12,8 +12,9 @@ const createSession = (session, member) => {
 }
 
 router.get('/login', (request, response) => {
-  if(request.session.user){
-    response.locals.email = request.session.user.email  
+  const memberSession = request.session
+  if(memberSession.user){
+    response.locals.email = memberSession.user.email  
   }
     response.render('login')
 })
@@ -46,12 +47,10 @@ router.get('/signup', (request, response) => {
 
 router.post('/signup', (request, response) => {
   const { email, password, role } = request.body
-  console.log(email)
   db.findByEmail(email)
     .then((member) => {
       if(member){
-        // console.log(member)
-        session(request.session, member.email)
+        createSession(request.session, member)
         response.redirect('/login')  
       } else {
         encrypt(password)
