@@ -50,7 +50,7 @@ router.post('/signup', (request, response) => {
   db.findByEmail(email)
     .then((member) => {
       if(member){
-        console.log(member)
+        // console.log(member)
         session(request.session, member.email)
         response.redirect('/login')  
       } else {
