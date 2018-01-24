@@ -1,16 +1,16 @@
 <%- include ./partials/header.ejs %>
 
 <form method="post" action="/login">
-  <input type="email" name="email" placeholder="email">
-  <input type="password" name="password" placeholder="password">
-  <input type="text" name="role" placeholder="role">
+  <input type="email" name="email" placeholder="email" required>
+  <input type="password" name="password" placeholder="password" required>
+  <input type="text" name="role" placeholder="role" required>
   <input type="submit" value="Login">
 </form>
-<% if(email) { %>
-  <div>Email: <%= email %> already exist please login</div>
-<% } else if(wrongPassword) { %>
+<% if(locals.email) { %>
+  <div>Email: <%= locals.email %> already exist please login</div>
+<% } else if(locals.wrongPassword) { %>
   <div>Invalid email or password, please try again</div>
-<% } else if(loggedOut) { %>
+<% } else if(locals.loggedOut) { %>
   <div>You are logged out</div>
 <% }%>
 <%- include ./partials/footer.ejs %>

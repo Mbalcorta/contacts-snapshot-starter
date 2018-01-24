@@ -4,9 +4,9 @@ const { hasPermissions } = require('../authorization.js')
 
 router.get('/new', (request, response) => {
   if(hasPermissions(request.session.user.role, 'createContact')){
-    response.render('contacts/new', { signup: false, home: false, welcome: true, access: request.session.user.role })    
+    response.render('contacts/new', { welcome: true, access: request.session.user.role })    
   } else {
-    response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true, access: request.session.user.role})
+    response.status(403).render('common/unauthorized', { welcome: true, access: request.session.user.role})
   }
 })
 
@@ -24,7 +24,7 @@ router.get('/:contactId', (request, response, next) => {
   if (!contactId || !/^\d+$/.test(contactId)) return next()
   contacts.findById(contactId)
     .then(function(contact) {
-      if (contact) return response.render('contacts/show', { contact, signup: false, home: false, welcome: true,  access: request.session.user.role})
+      if (contact) return response.render('contacts/show', { contact, welcome: true,  access: request.session.user.role})
       next()
     })
     .catch( error => next(error) )
@@ -41,7 +41,7 @@ router.delete('/:contactId', (request, response, next) => {
     })
     .catch( error => next(error) )
   } else {
-    response.status(403).render('common/unauthorized', {signup: false, home: false, welcome: true})
+    response.status(403).render('common/unauthorized', { welcome: true })
   }
 })
 
@@ -49,7 +49,7 @@ router.get('/search', (request, response, next) => {
   const query = request.query.q
   contacts.search(query)
     .then(function(contacts) {
-      if (contacts) return response.render('contacts/index', { query, contacts, signup: false, home: false, welcome: true, access: request.session.user.role })
+      if (contacts) return response.render('contacts/index', { query, contacts, welcome: true, access: request.session.user.role })
       next()
     })
     .catch( error => next(error) )

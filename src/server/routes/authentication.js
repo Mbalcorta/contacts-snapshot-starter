@@ -12,7 +12,11 @@ const createSession = (session, member) => {
 }
 
 router.get('/login', (request, response) => {
-    response.render('login', {signup: false,  email: request.session.user ? request.session.user.email : false, welcome: false, wrongPassword: false, loggedOut: false, home: false })
+  const memberSession = request.session
+  if(memberSession.user){
+    response.locals.email = memberSession.user.email  
+  }
+    response.render('login')
 })
 
 router.post('/login', (request, response, next) => {
@@ -27,7 +31,7 @@ router.post('/login', (request, response, next) => {
         createSession(request.session, member)
         response.redirect('/')
       } else { 
-       response.render('login', {email: false, wrongPassword: true, signup: false, welcome: false, home: false})
+       response.render('login', { wrongPassword: true })
       }
     })
   })
@@ -43,21 +47,28 @@ router.get('/signup', (request, response) => {
 
 router.post('/signup', (request, response) => {
   const { email, password, role } = request.body
-  encrypt(password)
-  .then((encrypted_password) => {
-    db.create({email, encrypted_password, role})
+  db.findByEmail(email)
     .then((member) => {
-      createSession(request.session, {email: email, role: role})
-      response.redirect('/')
-    })
-    .catch((error) => {
-      console.log(error)
-      if(error.code === '23505'){
-      session(request.session, email)
-      response.redirect('/login')
+      if(member){
+        createSession(request.session, member)
+        response.redirect('/login')  
+      } else {
+        encrypt(password)
+        .then((encrypted_password) => {
+          db.create({email, encrypted_password, role})
+          .then((member) => {
+            createSession(request.session, {email: email, role: role})
+            response.redirect('/')
+          })
+          .catch((error) => {
+            if(error.code === '23505'){
+            session(request.session, email)
+            response.redirect('/login')
+            }
+          }) 
+        })
       }
-    }) 
-  })
+    }).catch(console.error)
 })
 
 router.get('/logout', (request, response) => {
