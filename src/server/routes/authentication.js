@@ -21,7 +21,6 @@ router.get('/login', (request, response) => {
 
 router.post('/login', (request, response, next) => {
   const { email, password } = request.body
-  //get member object and check passwords
   db.findByEmail(email)
   .then((member) => {
     const { encrypted_password } = member
