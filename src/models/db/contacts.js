@@ -1,5 +1,4 @@
 const db = require('./db')
-
 const create = function(contact){
   return db.query(`
     INSERT INTO
