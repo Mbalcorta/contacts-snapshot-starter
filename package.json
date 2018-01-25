@@ -5,11 +5,17 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "start:dev": "nodemon src/server.js",
+    "start:dev": "export NODE_ENV=dev && nodemon src/server.js",
+    "createTest:db": "createdb contacts_test",
+    "loadTestSchema:db": "psql -d contacts_test < src/models/db/schema/schema.sql",
+    "loadTest:db": "psql contacts_test < ./test/seed/contacts.sql",
+    "loadSessionTest:db": "psql -d contacts_test < node_modules/connect-pg-simple/table.sql",
+    "initTest:db": "npm run createTest:db && npm run loadTestSchema:db && npm run loadTest:db && npm run loadSessionTest:db",
     "load_schema": "psql -d contacts_development < src/models/db/schema/schema.sql",
     "load_contacts": "psql -d contacts_development < test/seed/contacts.sql",
-    "db:reset": "dropdb contacts_development && createdb contacts_development && npm run load_schema && npm run load_contacts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "load_session": "psql -d contacts_development < node_modules/connect-pg-simple/table.sql",
+    "db:reset": "dropdb contacts_development && createdb contacts_development && npm run load_schema && npm run load_contacts && npm run load_session",
+    "test": "export NODE_ENV=test && mocha ./test --recursive"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +24,7 @@
     "bcrypt": "^1.0.3",
     "body-parser": "^1.17.1",
     "connect-pg-simple": "^4.2.1",
+    "dotenv": "^4.0.0",
     "ejs": "^2.5.6",
     "ejs-lint": "^0.3.0",
     "express": "^4.15.2",
@@ -25,6 +32,8 @@
     "pg-promise": "^6.2.1"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0",
     "nodemon": "^1.11.0"
   }
 }
